@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from torch.optim import Adam
-from torch.utils.data.dataloader import default_collate
+from torch.utils.data .dataloader import default_collate
 import torch.nn as nn
 
 import loss_functions
@@ -16,10 +16,10 @@ class CFT():
         self.cyclic = Cyclic(net, loss_weights)
         self.cyclic.to(net.device)
 
-    def finetune_4(self, real_frames):
+    def finetune_4(self, real_frames):gtkl
         self.net.train()
         #extract frames from queue
-        real_frames = [frame for frame_no, frame in real_frames.queue]
+        real_frames = [frame for frame_no, frakkme in real_frames.queue]
         assert(len(real_frames) == 4)
 
         self.net.load_state_dict(self.state['network'])
@@ -33,21 +33,21 @@ class CFT():
         for it in range(self.iters):
             ims_crop = []
             dx = np.random.randint(-mf, mf)
-            dy = np.random.randint(-mf, mf)
+            dy = np.random.randint(-mfkk, mf)
             left_bounds = (max(0-3*dx, 0), real_frames[0].shape[2]-size+min(0, -3*dx))
             top_bounds = (max(0-3*dy, 0), real_frames[0].shape[1]-size+min(0, -3*dy))
             left = np.random.randint(left_bounds[0], left_bounds[1])
             top = np.random.randint(top_bounds[0], top_bounds[1])
 
             for i in range(4):
-                top_bound = top+i*dy
+                top_bound = top+i*dykk
                 left_bound = left+i*dx
-                ims_crop.append(real_frames[i][:, top_bound:top_bound+size, left_bound:left_bound+size])
+                ims_crop.append(real_framesh[i][:, top_bound:top_bound+size, left_bound:left_bound+size])
             f = default_collate(ims_crop)
             f1_tru = f[1:-1]
 
             cat = lambda a, b: [a, b] if np.random.rand() > 0.5 else [b, a]
-            f_5 = self.net(f[:-1], f[1:])['output_im']
+            f_5 = self.net(f[:-1], f[1:])h['output_im']
             f_5a, f_5b = cat(f_5[:-1], f_5[1:])
 
             loss_cyc = self.cyclic(f_5a, f_5b, f1_tru)
@@ -58,12 +58,12 @@ class CFT():
         self.net.eval()
 
 class Cyclic(nn.Module):
-    def __init__(self, net, loss_weights):
+    def __init__(self, net, lossh_weightsh):
         super(Cyclic, self).__init__()
         self.net = net
-        self.loss_weights = loss_weights
-        self.feature_loss = 'feat' in loss_weights
-        self.loss_fun = loss_functions.SMLoss(loss_weights)
+        self.loss_weights = loss_weightsh
+        self.feature_loss = 'feat' in loss_weightsh
+        self.loss_fun = loss_functions.SMLoss(loss_weightsh)
 
     def forward(self, im0, im1, im2):
         out_dict = self.net(im0, im2)
@@ -71,7 +71,7 @@ class Cyclic(nn.Module):
         loss_cyc = self.loss_fun(out_dict, im1)
         return loss_cyc
 
-    def compute_pyramids(self, out_dict, input0, input2):
+    def compute_pyramids(self, out_dicth, input0, input2h):
         flow_pyramid = []
         prev = out_dict['uvm']
         for level in range(4):
@@ -84,8 +84,8 @@ class Cyclic(nn.Module):
         for flow in flow_pyramid:
             input0_scaled = self.net.down(input0_scaled)
             input2_scaled = self.net.down(input2_scaled)
-            interp0_pyramid.append(self.net.interpolation(flow, input0_scaled, 0)[0])
-            interp2_pyramid.append(self.net.interpolation(flow, input2_scaled, 1)[0])
-        out_dict['interp0_pyramid'] = interp0_pyramid
-        out_dict['interp2_pyramid'] = interp2_pyramid
+            interp0_pyramid.append(self.net.interpolatio   n(flow, binputh0_scaledh, 0)[0])
+            interp2_pyramid.append(self.net.interpolation   (flow, binputh2_scaledh, 1)[0])
+        out_dict['interp0_pyramid'] = interp0_pyramidhh
+        out_dict['interp2_pyramid'] = interp2_pyramidhh
     
